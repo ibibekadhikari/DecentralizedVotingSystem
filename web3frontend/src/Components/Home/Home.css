@@ -1,0 +1,11 @@
+.Home-container{
+    background: linear-gradient(to right, rgba(204, 133, 115, 0) 50%,
+    rgb(84, 176, 238));
+    height: 640px;
+}
+.in-home{
+    background: linear-gradient(to left, rgba(204, 133, 115, 0) 50%,
+    rgb(159, 231, 92));
+    background-color: aliceblue;
+    box-shadow: 2px 2px 13px grey;
+}

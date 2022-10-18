@@ -1,0 +1,7 @@
+.footer {
+    height: 4.5rem;
+    width: 100%;  /* Height of the footer */
+    top: 750px;
+    display: flex;
+    align-items: center;
+ }
