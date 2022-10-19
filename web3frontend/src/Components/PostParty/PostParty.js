@@ -52,41 +52,37 @@ const postData = async() => {
   })
 }
 
-
+const [electionName, setElectionName] = useState('');
 
 const handleChange = (e) => {
     e.preventDefault();
     PartyData[e.target.name] = e.target.value;
     PartyData["c_count"] = candidateCount.length;
     PartyData["e_id"] = electionId;
-    PartyData["e_name"] = electionName;
     const newData = {...PartyData};
     setPartyData(newData);
 
 }
 
 const [isActive, setisActive] = useState(false);
+const [electionId, setElectionId] = useState('');
 
-
-
-const findElectionId = () => {
-   candidateCount.forEach((i)=>{
-    var e_name = '';
-    if(i.e_id === electionId ){  
-      console.log(i) 
-      e_name = i.e_name;
+const findElectionName = () => {
+  var ename = '';
+  for (const i of candidateCount){
+    if(i.e_id === electionId ){
+      ename = i.e_name;
+      // break;
     }
-    return e_name;
-   })
+  }
+  return ename;
 }
 
 const updateElectionName = (e) => {
-  const e_id = e.target.value;
-  setElectionId(e_id)
-     const ename = findElectionId();
-     console.log(ename,e_id);
-        setElectionname(ename)
+     const e_id = e.target.value;
+        setElectionId(e_id)
         setisActive(true);
+        setElectionName(findElectionName())
 }
 
 const content = <>
@@ -131,7 +127,7 @@ const content = <>
         candidateCount.map((elements)=>{
           return (
             <>
-            <button className='btn btn-warning' style={{marginTop: "-5px", backgroundColor: isActive && electionName === elements.e_name? "#f0a046": "", }} value={elements.e_id} onClick={(e) => updateElectionName(e)}>{elements.e_name}</button>
+            <button className='btn btn-warning' style={{marginTop: "-5px", backgroundColor: isActive && electionId === elements.e_id? "#f0a046": "", }} value={elements.e_id} onClick={(e) => updateElectionName(e)}>{elements.e_name}</button>
 
             </>
           )
