@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, {useState, useRef} from 'react'
+import React, {useState, useRef, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -7,6 +7,13 @@ import { ToastContainer, toast } from 'react-toastify';
 const Register= () => {
 
    const url = "http://localhost:3030/api/admins";
+
+  const [fetchedData, setFetchedData] = useState([]);
+
+  useEffect(()=>{
+    fetch(url).then((resp)=>resp.json()
+    .then((data)=>setFetchedData(data)))
+  },[])
     
     const navigate = useNavigate();
     const loginHere = () =>{
@@ -21,6 +28,21 @@ const Register= () => {
       }
     const {email, citizenship, password, cpassword} = userDetails;
 
+    const checkEmailExist = () => {
+        var exist = true;        
+        for (let element of fetchedData){
+            if (element.a_email === userDetails.email.current.value){
+              exist = false;
+              break;
+            }else {
+              exist = true;
+            }
+
+    }
+    return exist;
+  }
+
+
    const submitRegister = () => {
     const newData = {
       a_email: email.current.value,
@@ -28,7 +50,8 @@ const Register= () => {
       a_password: password.current.value,
       a_cpassword: cpassword.current.value
     }
-
+    
+    if (checkEmailExist()){
     axios.post(url,newData).then((resp)=>{
       console.log("The data has been Posted successfully.")
       toast.success('Admin has been registered Successfully.', {
@@ -43,10 +66,21 @@ const Register= () => {
         });
     }).catch((err)=>{
       console.log("The post has not been completed.")
-    })
+    })    
+   }else{
+    toast.error('Your Email address has been already Registered.', {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      });
    }
 
-
+    }
   return (
 <>
 <ToastContainer />
