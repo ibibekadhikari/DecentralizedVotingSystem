@@ -21,7 +21,7 @@ const partySchemas = new mongoose.Schema(
                p_id: {
                 type: Number
                },
-               e_name: String,
+               e_id: Number,
                 p_name: {
                 type: String,
                 require: true,

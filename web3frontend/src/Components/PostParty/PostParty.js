@@ -1,13 +1,20 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react'
+import useEth from "../../contexts/EthContext/useEth";
+import NoticeNoArtifact from "./NoticeNoArtifact";
+import NoticeWrongNetwork from "./NoticeWrongNetwork";
 
 const PostParty = () => {
+
+  const { state: { contract, accounts,artifact } } = useEth();
 
 const url = "http://localhost:3030/api/parties";
   
 
 
 const [candidateCount, setcandidateCount] = useState([]);
+const [electionId, setElectionId] = useState(0);
+const [electionName, setElectionname] = useState('');
 
 useEffect(()=> {
         fetch('http://localhost:3030/api/elections')
@@ -18,22 +25,40 @@ useEffect(()=> {
 const [PartyData, setPartyData] = useState({
     p_name: '',
     c_count: null,
-    e_name: ''
+    p_id: null,
+    e_id: null,
 })
 
-const postData = () => {
+const postData = async() => {
+  await contract.methods.registerParty(PartyData.e_name,PartyData.p_name).send({ from: accounts[0] }).then(function(event){
+    const a = event.events.EventCreateparty.returnValues;
+    console.log(a);
+    const rdata = {
+      p_name: a.party_name,
+      c_count: null,
+      p_id: a.party_id,
+      e_id: electionId
+    }
+    const robj = Object.assign(PartyData,rdata);
+    console.log(rdata);
+    setPartyData(rdata);
     axios.post(url,PartyData).then((resp)=>{
       console.log("The data has been Posted successfully.")
     }).catch((err)=>{
       console.log("The post has not been completed.")
     })
     console.log(candidateCount.length)
+
+  })
 }
+
+
 
 const handleChange = (e) => {
     e.preventDefault();
     PartyData[e.target.name] = e.target.value;
     PartyData["c_count"] = candidateCount.length;
+    PartyData["e_id"] = electionId;
     PartyData["e_name"] = electionName;
     const newData = {...PartyData};
     setPartyData(newData);
@@ -42,20 +67,30 @@ const handleChange = (e) => {
 
 const [isActive, setisActive] = useState(false);
 
-const [electionName, setElectionname] = useState('');
+
+
+const findElectionId = () => {
+   candidateCount.forEach((i)=>{
+    var e_name = '';
+    if(i.e_id === electionId ){  
+      console.log(i) 
+      e_name = i.e_name;
+    }
+    return e_name;
+   })
+}
 
 const updateElectionName = (e) => {
-     const eName = e.target.value;
-        setElectionname(eName)
+  const e_id = e.target.value;
+  setElectionId(e_id)
+     const ename = findElectionId();
+     console.log(ename,e_id);
+        setElectionname(ename)
         setisActive(true);
 }
 
-
-
-
-  return (
-    <div>
-    <section className="vh-100 bg-image"
+const content = <>
+  <section className="vh-100 bg-image"
     style={{backgroundImage: "url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp')"}}>
     <div className="mask d-flex align-items-center h-100 gradient-custom-3">
       <div className="container h-100" >
@@ -96,7 +131,7 @@ const updateElectionName = (e) => {
         candidateCount.map((elements)=>{
           return (
             <>
-            <button className='btn btn-warning' style={{marginTop: "-5px", backgroundColor: isActive && electionName === elements.e_name? "#f0a046": "", }} value={elements.e_name} onClick={(e) => updateElectionName(e)}>{elements.e_name}</button>
+            <button className='btn btn-warning' style={{marginTop: "-5px", backgroundColor: isActive && electionName === elements.e_name? "#f0a046": "", }} value={elements.e_id} onClick={(e) => updateElectionName(e)}>{elements.e_name}</button>
 
             </>
           )
@@ -108,6 +143,17 @@ const updateElectionName = (e) => {
       </div>
     </div>
   </section>
+</>
+
+
+
+  return (
+    <div>
+      {
+      !artifact ? <NoticeNoArtifact /> :
+        !contract ? <NoticeWrongNetwork /> :
+        content
+      }
   </div>
   )
 }

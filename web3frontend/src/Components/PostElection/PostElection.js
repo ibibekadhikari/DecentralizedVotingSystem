@@ -14,27 +14,27 @@ const [electionData, setElectionData] = useState({
     e_name: '',
     is_running: false,
     p_count: null,
-    e_id : 0,
+
 })
 
 const postData = async() => {
 
   await contract.methods.registerElection(electionData.e_name).send({ from: accounts[0] }).then(function(event){
     const a = event.events.EventCreateElection.returnValues;
-    console.log(a);
     const rdata = {
     e_name: a.election_name,
-    is_running: false,
-    e_id: a.election_id,
+    is_running: electionData.is_running,
+    e_id: a.election_id
     }
-    setElectionData(rdata);
-
-    axios.post(url,electionData).then((resp)=>{
-      console.log("The data has been Posted successfully.")
-      console.log(electionData)
-    }).catch((err)=>{
-      console.log("The post has not been completed.")
-    })
+    const robj = Object.assign(electionData,rdata);
+      setElectionData(rdata);
+      axios.post(url,electionData).then((resp)=>{
+        console.log("The data has been Posted successfully.")
+        console.log(electionData)
+      }).catch((err)=>{
+        console.log("The post has not been completed.")
+      })
+   
 
 
   })
