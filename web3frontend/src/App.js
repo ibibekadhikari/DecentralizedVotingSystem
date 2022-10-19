@@ -9,7 +9,7 @@ import Navbar from './Components/Navbar/Navbar';
 import Footer from './Components/Footer/Footer';
 import Home from './Components/Home/Home';
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
-
+import { EthProvider } from "./contexts/EthContext";
 import PostElection from './Components/PostElection/PostElection'
 import PostVoter from './Components/PostVoter/PostVoter'
 import PostParty from './Components/PostParty/PostParty'
@@ -31,6 +31,7 @@ function App() {
   <>
   <div className="App">
       <Navbar />
+      <EthProvider>
       <Routes>
 
       <Route exact path="/" element={<Home />} />
@@ -48,6 +49,7 @@ function App() {
 
       <Route path="/adminhome" element={<AdminHome />} />
     </Routes>
+    </EthProvider>
     <Footer />
   </div>
     </>

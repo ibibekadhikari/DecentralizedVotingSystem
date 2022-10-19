@@ -1,24 +1,43 @@
 import axios from 'axios';
 import React, {useState, useEffect} from 'react'
 import "./PostElection.css";
+import useEth from "../../contexts/EthContext/useEth";
+import NoticeNoArtifact from "./NoticeNoArtifact";
+import NoticeWrongNetwork from "./NoticeWrongNetwork";
 
 const PostElection = () => {
+  const { state: { contract, accounts,artifact } } = useEth();
 
 const url = "http://localhost:3030/api/elections";
   
 const [electionData, setElectionData] = useState({
     e_name: '',
     is_running: false,
-    p_count: null
+    p_count: null,
+    e_id : 0,
 })
 
-const postData = () => {
+const postData = async() => {
+
+  await contract.methods.registerElection(electionData.e_name).send({ from: accounts[0] }).then(function(event){
+    const a = event.events.EventCreateElection.returnValues;
+    console.log(a);
+    const rdata = {
+    e_name: a.election_name,
+    is_running: false,
+    e_id: a.election_id,
+    }
+    setElectionData(rdata);
+
     axios.post(url,electionData).then((resp)=>{
       console.log("The data has been Posted successfully.")
       console.log(electionData)
     }).catch((err)=>{
       console.log("The post has not been completed.")
     })
+
+
+  })
 }
 
 const [partyCount, setpartyCount] = useState([]);
@@ -38,9 +57,8 @@ const handleChange = (e) => {
     setElectionData(newData);
 
 }
-
-  return (
-    <div>
+const content = <>
+<div>
     <section className="vh-100 bg-image"
     style={{backgroundImage: "url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp')"}}>
     <div className="mask d-flex align-items-center h-100 gradient-custom-3">
@@ -85,7 +103,19 @@ const handleChange = (e) => {
     </div>
   </section>
   </div>
+
+</>
+
+  return (
+    <div>
+    {
+      !artifact ? <NoticeNoArtifact /> :
+        !contract ? <NoticeWrongNetwork /> :
+          content
+    }
+</div>
   )
+
 }
 
 export default PostElection;
