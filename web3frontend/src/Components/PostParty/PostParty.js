@@ -14,7 +14,7 @@ const url = "http://localhost:3030/api/parties";
 
 const [candidateCount, setcandidateCount] = useState([]);
 const [electionId, setElectionId] = useState(0);
-const [electionName, setElectionname] = useState('');
+// const [electionName, setElectionname] = useState('');
 
 useEffect(()=> {
         fetch('http://localhost:3030/api/elections')
@@ -47,7 +47,7 @@ const postData = async() => {
     }).catch((err)=>{
       console.log("The post has not been completed.")
     })
-    console.log(candidateCount.length)
+    // console.log(candidateCount.length)
 
   })
 }
@@ -59,30 +59,35 @@ const handleChange = (e) => {
     PartyData[e.target.name] = e.target.value;
     PartyData["c_count"] = candidateCount.length;
     PartyData["e_id"] = electionId;
+    PartyData["e_name"] = electionName;
     const newData = {...PartyData};
     setPartyData(newData);
 
 }
 
 const [isActive, setisActive] = useState(false);
-const [electionId, setElectionId] = useState('');
+// const [electionId, setElectionId] = useState('');
 
-const findElectionName = () => {
-  var ename = '';
-  for (const i of candidateCount){
-    if(i.e_id === electionId ){
-      ename = i.e_name;
-      // break;
-    }
-  }
-  return ename;
-}
+// const findElectionName = () => {
+//   var ename = '';
+//   for (const i of candidateCount){
+//     if(i.e_id === electionId ){
+//       ename = i.e_name;
+//       // break;
+//     }
+//   }
+//   return ename;
+// }
 
 const updateElectionName = (e) => {
-     const e_id = e.target.value;
-        setElectionId(e_id)
+     const a = (e.target.value).split(" ");
+     const e_id = a[0].split(",")[0];
+     const e_name = a[0].split(",")[1];
+     console.log(e_id)
+        setElectionId(e_id);
         setisActive(true);
-        setElectionName(findElectionName())
+        setElectionName(e_name);
+        
 }
 
 const content = <>
@@ -94,7 +99,7 @@ const content = <>
           <div className="col-12 col-md-8 col-lg-7 col-xl-6 ">
             <div className="card" style={{borderRadius: "15px"}}>
               <div className="card-body p-5 ">
-                <h2 className="text-center mb-5">Register Party Data {electionName}.</h2>  
+                <h2 className="text-center mb-5">Register Party Data {"\n"} For Election: {electionName}.</h2>  
                 
                 <form>  
                   <div className="form-outline mb-2" >
@@ -127,7 +132,7 @@ const content = <>
         candidateCount.map((elements)=>{
           return (
             <>
-            <button className='btn btn-warning' style={{marginTop: "-5px", backgroundColor: isActive && electionId === elements.e_id? "#f0a046": "", }} value={elements.e_id} onClick={(e) => updateElectionName(e)}>{elements.e_name}</button>
+            <button className='btn btn-warning' style={{marginTop: "-5px", backgroundColor: isActive && electionId === elements.e_id? "#f0a046": "", }} value={[elements.e_id,elements.e_name]} onClick={(e) => updateElectionName(e)}>{elements.e_name}</button>
 
             </>
           )
