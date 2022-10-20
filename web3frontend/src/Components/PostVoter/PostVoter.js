@@ -1,7 +1,12 @@
 import axios from 'axios';
 import React, {useState} from 'react'
+import useEth from "../../contexts/EthContext/useEth";
+import NoticeNoArtifact from "./NoticeNoArtifact";
+import NoticeWrongNetwork from "./NoticeWrongNetwork";
 
 const PostVoter = () => {
+
+  const { state: { contract, accounts,artifact } } = useEth();
 
 const url = "http://localhost:3030/api/voters";
   
@@ -29,9 +34,8 @@ const handleChange = (e) => {
 
 }
 
-  return (
-    <div>
-    <section className="vh-100 bg-image"
+const content = <>
+<section className="vh-100 bg-image"
     style={{backgroundImage: "url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp')"}}>
     <div className="mask d-flex align-items-center h-100 gradient-custom-3">
       <div className="container h-100">
@@ -88,6 +92,15 @@ const handleChange = (e) => {
       </div>
     </div>
   </section>
+</>
+
+  return (
+    <div>
+          {
+      !artifact ? <NoticeNoArtifact /> :
+        !contract ? <NoticeWrongNetwork /> :
+        content
+      }
   </div>
   )
 }
