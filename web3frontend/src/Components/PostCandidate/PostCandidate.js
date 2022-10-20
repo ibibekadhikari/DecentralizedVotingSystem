@@ -8,21 +8,30 @@ import NoticeWrongNetwork from "./NoticeWrongNetwork";
 const PostCandidate = () => {
 
 const { state: { contract, accounts,artifact } } = useEth();
+const [partyAll, setpartyAll] = useState([]);
 const [partyCount, setpartyCount] = useState([]);
+const [elections, setElections] = useState([]);
 
 const [partyName, setPartyName] = useState('');
 const [partyId, setPartyId] = useState('');
+const [electionName, setElectionName] = useState('');
+const [electionId, setElectionId] = useState('');
+const [partydata, setPartydata] = useState('');
 
 useEffect(()=> {
   fetch('http://localhost:3030/api/parties')
   .then((response) => response.json())
-  .then((data) => setpartyCount(data));
-})
-let elections = {}
-      useEffect(()=> {
-        fetch('http://localhost:3030/api/elections')
-      .then((response) => elections=response.json());
-      })
+  .then((data) => setpartyAll(data));
+
+  fetch('http://localhost:3030/api/elections')
+      .then((response) => response.json())
+      .then((data) => setElections(data));
+},[]);
+  // useEffect(()=> {
+  //       fetch('http://localhost:3030/api/elections')
+  //     .then((response) => response.json())
+  //     .then((data) => setElections(data));
+  //     });
 
 const url = "http://localhost:3030/api/candidates"
 
@@ -34,17 +43,40 @@ const [CandidateData, setCandidateData] = useState({
     c_post: '',
     c_votes: 0,
     p_id:null,
-    p_name:null                               
+    p_name:null,
+    c_id:null                             
         })
 
-  const getEname = (data,p_id) =>{
-console.log(data,p_id);
-  }
+  // const getEname = (data,p_id) =>{
+  //   partyCount.forEach((element)=>{
+  //     if (element.p_id == p_id){
+  //       const e_id = element.e_id;
+  //       data.forEach((element)=>{
+  //         if (element.e_id == e_id){
+  //           console.log(element.e_name);
+  //         }
+  //       })
+  //     }
+  //   })
+  // }
         
- const postData = () =>{
+ const postData = async() =>{
   
-      console.log(elections)
-      const ename = getEname(elections,CandidateData.p_id)
+      
+      await contract.methods.registerCandidate(CandidateData.e_name,CandidateData.p_name,CandidateData.c_name,CandidateData.c_post).send({ from: accounts[0] }).then(function(event){
+
+        const a = event.events.EventCreateCandidate.returnValues;
+        CandidateData["c_id"] = a.candidate_number;
+        console.log(CandidateData);
+        axios.post(url,CandidateData).then((resp)=>{
+          console.log("The data has been Posted successfully.")
+        }).catch((err)=>{
+          console.log("The post has not been completed.")
+        })
+        // console.log(candidateCount.length)
+    
+      })
+      // const ename = getEname(elections,CandidateData.p_id)
 
 
       // axios.post(url, CandidateData).then(()=>{
@@ -87,7 +119,29 @@ console.log(data,p_id);
     console.log(p_id,":",p_name);
        setPartyId(p_id);
        setPartyName(p_name);
+  } 
+
+  const partyhtml = <>
+
+
+</>
+
+  const updateElectionName = (e)=>{
+    const a = (e.target.value).split(" ");
+    const e_id = a[0].split(",")[0];
+    const e_name = a[0].split(",")[1];
+    console.log(e_id,":",e_name);
+       setElectionId(e_id);
+       setElectionName(e_name);
+       CandidateData["e_id"] = e_id;
+       CandidateData["e_name"] = e_name;
+       const filteredData = partyAll.filter(x => x.e_id == e_id);
+       setpartyCount(filteredData);
+       console.log(filteredData);
+       setPartydata(partyhtml);
   }
+
+
 
 
 
@@ -157,16 +211,38 @@ const content = <>
 
 
         <div className="container h-100" style={{marginTop: "260px"}}>
+    <div className="col-12 col-md-8 col-lg-7 col-xl-6 ">
+          <div className="card" style={{borderRadius: "15px"}}>
+          <div className="card-body p-5 ">
+     <h2>Choose Your Party:</h2>
+     <hr></hr>
+    {
+      partyCount.map((elements)=>{
+        return (
+          <>
+          <button className='btn btn-warning' style={{marginTop: "-5px"}} value={[elements.p_id,elements.p_name]} onClick={(e) => updatepartyName(e)}>{elements.p_name}</button>
+
+          </>
+        )
+      })
+    }
+    </div>
+    </div>
+    </div>
+    </div>
+
+
+      <div className="container h-100" style={{marginTop: "260px"}}>
       <div className="col-12 col-md-8 col-lg-7 col-xl-6 ">
             <div className="card" style={{borderRadius: "15px"}}>
             <div className="card-body p-5 ">
-       <h2>Choose Your Party:</h2>
+       <h2>Choose Your Election:</h2>
        <hr></hr>
       {
-        partyCount.map((elements)=>{
+        elections.map((elements)=>{
           return (
             <>
-            <button className='btn btn-warning' style={{marginTop: "-5px"}} value={[elements.p_id,elements.p_name]} onClick={(e) => updatepartyName(e)}>{elements.p_name}</button>
+            <button className='btn btn-warning' style={{marginTop: "-5px"}} value={[elements.e_id,elements.e_name]} onClick={(e) => updateElectionName(e)}>{elements.e_name}</button>
 
             </>
           )
