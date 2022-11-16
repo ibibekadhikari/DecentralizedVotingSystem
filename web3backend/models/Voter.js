@@ -19,22 +19,17 @@ const voterSchemas = new mongoose.Schema({
     v_name: String,
     v_gender: String,
     citizenship: String,
-    wallet_add: String,
     has_Voted: Boolean,
-    reg_date: {
-        type:Date,
-        default: Date.now()
-
-    }
+    reg_date: String
 })
 
-voterSchemas.pre('save', async function(){
-    if(!this.v_id || this.v_id === null){
-        const response = await getVoter();
-        console.log(response);
-        this.v_id = response + 1;
-    }
-})
+//voterSchemas.pre('save', async function(){
+//    if(!this.v_id || this.v_id === null){
+//        const response = await getVoter();
+//        console.log(response);
+//        this.v_id = response + 1;
+//    }
+//})
 
 //The below command will create a model from Schemas.
 

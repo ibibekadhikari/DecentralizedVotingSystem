@@ -1,23 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import "./VoterView.css";
+import useEth from "../../contexts/EthContext/useEth";
+import NoticeNoArtifact from "./NoticeNoArtifact";
+import NoticeWrongNetwork from "./NoticeWrongNetwork";
 
 
 
 const VoteViewSystem = () => {
-
+    const { state: { contract, accounts,artifact } } = useEth();
    const [candidateData, setCandidateData] = useState([]);
 
-   useEffect(()=> {
+useEffect(()=> {
     fetch('http://localhost:3030/api/candidates')
     .then((response) => response.json())
     .then((data) => setCandidateData(data));
+
 })
 
-   
+// const checkResult = async()=>{
+//     const a = await contract.methods.getVotes('Lec_Election_2022').call({ from: accounts[0] })
+//     console.log(a);
+//     eval(a).forEach((element)=>{
+//         const p_id =element.partyId;
+//         const p_votes = element.votes;
+//         console.log(p_id,p_votes);
+//         element.returnValues.forEach((einner)=>{
+//             const c_id = einner.c_id;
+//             const c_votes = einner.votes;
+            
+//         })
+//     })
+    
 
-  return (
-    <>
-    <div style={{display: "flex", flexDirection: "row", height: "650px"}}>      
+//     console.log(typeof (a))
+    
+// }
+
+
+
+   const content = <>
+   <div style={{display: "flex", flexDirection: "row", height: "650px"}}>      
             <div className='forPresident voteDiv'>
 
             <h1>President : VOTE</h1>
@@ -68,6 +90,15 @@ const VoteViewSystem = () => {
              
             </div>
     </div>
+   </>
+
+  return (
+    <>
+    {
+      !artifact ? <NoticeNoArtifact /> :
+        !contract ? <NoticeWrongNetwork /> :
+        content
+      }
     </>
   )
 }

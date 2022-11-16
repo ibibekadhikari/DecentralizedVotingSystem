@@ -154,7 +154,7 @@ const content = <>
         <div className="container h-100">
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col-12 col-md-8 col-lg-7 col-xl-6 ">
-              <div className="card" style={{borderRadius: "15px"}}>
+              <div className="card" style={{borderRadius: "15px", width:"400px"}}>
                 <div className="card-body p-5 ">
                   <h2 className="text-center mb-5">Register Candidate Data.</h2>  
                   
@@ -210,9 +210,9 @@ const content = <>
 
 
 
-        <div className="container h-100" style={{marginTop: "260px"}}>
+        <div className="container h-100" style={{marginTop: "260px", marginLeft: "120px"}}>
     <div className="col-12 col-md-8 col-lg-7 col-xl-6 ">
-          <div className="card" style={{borderRadius: "15px"}}>
+          <div className="card" style={{borderRadius: "15px", width:"300px"}}>
           <div className="card-body p-5 ">
      <h2>Choose Your Party:</h2>
      <hr></hr>
@@ -234,7 +234,7 @@ const content = <>
 
       <div className="container h-100" style={{marginTop: "260px"}}>
       <div className="col-12 col-md-8 col-lg-7 col-xl-6 ">
-            <div className="card" style={{borderRadius: "15px"}}>
+            <div className="card" style={{borderRadius: "15px", width:"300px"}}>
             <div className="card-body p-5 ">
        <h2>Choose Your Election:</h2>
        <hr></hr>

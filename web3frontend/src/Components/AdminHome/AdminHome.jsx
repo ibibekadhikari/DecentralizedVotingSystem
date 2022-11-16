@@ -18,7 +18,10 @@ const AdminHome = () => {
         navigate("/registervoter")
     }
     const voterView = () => {
-        navigate("/voterview")
+        navigate("/voterlogin")
+    }
+    const electionResult = () => {
+        navigate("/electionresult")
     }
 
 
@@ -53,6 +56,10 @@ const AdminHome = () => {
             <div>
             <h5>Election RUNNING!!! VOTE NOW</h5>
             <button className='btn btn-primary' style={{height: "70px", marginTop: "20px"}} onClick={voterView} >VOTE FROM HERE.</button>
+            </div>
+            <div>
+            <h5>Election Result.</h5>
+            <button className='btn btn-primary' style={{height: "70px", marginTop: "20px"}} onClick={electionResult} >See Result.</button>
             </div>
       </div>
       </div>

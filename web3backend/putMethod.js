@@ -36,9 +36,24 @@ router.put("/api/:id", async (req,res)=>{
     
     }
     else if(url_id === "candidates"){
-    let candidateVote = await Candidate.findOne({c_id : req.body.c_id})
-    await Candidate.updateOne({c_id : req.body.c_id},{c_votes : candidateVote.c_votes + 1})
-    console.log("hellooworld")
+    let x= req.body;
+  
+    let candidateVote = await Candidate.findOne({c_id : x[0]});
+    await Candidate.updateOne({c_id : x[0]},{c_votes : candidateVote.c_votes + 1});
+    console.log(new Date())
+     candidateVote = await Candidate.findOne({c_id : x[1]});
+    await Candidate.updateOne({c_id : x[1]},{c_votes : candidateVote.c_votes + 1});
+  console.log(new Date())
+     candidateVote = await Candidate.findOne({c_id : x[2]});
+    await Candidate.updateOne({c_id : x[2]},{c_votes : candidateVote.c_votes + 1});
+  console.log(new Date())
+     candidateVote = await Candidate.findOne({c_id : x[3]});
+    await Candidate.updateOne({c_id : x[3]},{c_votes : candidateVote.c_votes + 1});
+  console.log(new Date())
+     candidateVote = await Candidate.findOne({c_id : x[4]});
+    await Candidate.updateOne({c_id : x[4]},{c_votes : candidateVote.c_votes + 1});
+  console.log(new Date())
+
    
    }
 

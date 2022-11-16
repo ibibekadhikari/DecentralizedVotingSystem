@@ -18,6 +18,7 @@ import PostCandidate from './Components/PostCandidate/PostCandidate'
 import AdminHome from './Components/AdminHome/AdminHome';
 import VoterView from './Components/VoterPerspective/VoterView';
 import VoteViewSystem from './Components/VoteViewSystem/VoteViewSystem';
+import VoterLogin from './Components/VoterLogin/VoterLogin';
 
 
 
@@ -36,13 +37,14 @@ function App() {
 
       <Route exact path="/" element={<Home />} />
       <Route exact path="/login" element={<Login />} />
+      <Route exact path="/voterlogin" element={<VoterLogin />} />
       <Route exact path="/register" element={<Register />} />
       <Route exact path="/registerelection" element={<PostElection />} />
       <Route exact path="/registerparty" element={<PostParty />} />
       <Route exact path="/registercandidate" element={<PostCandidate />} />
       <Route exact path="/registervoter" element={<PostVoter />} />
       <Route exact path="/voterview" element={<VoterView />} />
-      <Route exact path="/countingvote" element={<VoteViewSystem />} />
+      <Route exact path="/electionresult" element={<VoteViewSystem />} />
       
       <Route path="*" element={<PageNotFound />} />
 
@@ -50,7 +52,7 @@ function App() {
       <Route path="/adminhome" element={<AdminHome />} />
     </Routes>
     </EthProvider>
-    <Footer />
+    {/* <Footer /> */}
   </div>
     </>
 

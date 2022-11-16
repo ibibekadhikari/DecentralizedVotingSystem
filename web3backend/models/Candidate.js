@@ -14,17 +14,6 @@ const getCandidate = async () => {
     }
     }
 
-c_citizenship: "1234"
-c_gender: "female"
-c_id: "1"
-c_name: "ase"
-c_party: "congo"
-c_post: "mayors"
-c_votes: 0
-e_id: "16"
-e_name: "rahul"
-p_id: "15"
-p_name: "cong"
 
 const candidateSchemas = new mongoose.Schema({
     c_id: Number,

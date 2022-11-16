@@ -16,14 +16,29 @@ const VoterByType = (props) => {
 
 
 
-  const [candidateData, setCandidateData] = useState([]);
-  
+  const [candidateData, setCandidateData] = useState([]);  
   useEffect(()=> {
     fetch('http://localhost:3030/api/candidates')
     .then((response) => response.json())
     .then((data) => setCandidateData(data));
 },[])
-
+ 
+const [PartyInfo, setPartyInfo] = useState([]);
+useEffect(()=> {
+  fetch('http://localhost:3030/api/parties')
+  .then((response) => response.json())
+  .then((data) => setPartyInfo(data));
+},[])
+  
+const giveMePName = (p_id) => {
+  var new_pid = null;
+  for (const element of PartyInfo){
+      if(parseInt(p_id) === parseInt(element.p_id)){
+          new_pid = element.p_name;
+      }
+  }
+  return new_pid;
+}
 
 const [votedData, setVotedData] = useState(0);
 
@@ -79,20 +94,17 @@ const voteDone = (e) => {
             <img className="card-img-top" style={{width: "200px", height:"150px"}} src={getImage()} alt="Card image" />
             <div className="card-body">
             <h3 className="card-title" style={{fontSize: "20px"}}>{data.c_name}</h3>
-            <h4 className="card-title"  style={{fontSize: "15px"}}>Party: {data.c_party}</h4>
+            <h4 className="card-title"  style={{fontSize: "15px"}}>Party: {giveMePName(data.p_id)}</h4>
             <h4 className="card-title"  style={{fontSize: "15px"}} >Post: {data.c_post}</h4>
             <label htmlFor="VoteFor">Click to Vote:    </label>
-            <input type="radio" style={{margin: "0px 15px"}} name={props.c_post} onChange={(e)=>{voteDone(e)}} value={data.c_id}></input>
+            <input type="radio" style={{margin: "0px 15px"}} name={props.c_post} onChange={(e)=>{voteDone(e)}} id={data.c_post} value={data.c_id}></input>
             </div>
             </div>    
            </div>
         )}
     
      })   
-    }    <div>
-                <h6 style={{marginLeft: "0px", marginRight: "0px"}}>Click to Vote.</h6>
-                <button className='btn btn-primary' style={{height: "50px", width: "100px", marginLeft: "0px", marginRight: "0px"}} onClick={voteClicked}>VOTE</button>
-                </div>
+    }    
     </div>
     </>
   )
